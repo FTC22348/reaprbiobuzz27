@@ -71,7 +71,8 @@ public class Tests extends Procedure {
             followerFunction = (hardwareMap) -> new Follower(localizerFunction.apply(hardwareMap), drivetrainFunction.apply(hardwareMap), algorithmSupplier.get());
 
         Inputs inputs = inputs("Select", "Select");
-        Inputs.Field<Test> selectedTest = inputs.e("Test", Test.class).withDefault(Test.LINE);
+        Test defaultTest = algorithm ? Test.LINE : (localizer ? Test.POSE : Test.DRIVING);
+        Inputs.Field<Test> selectedTest = inputs.e("Test", Test.class).withDefault(defaultTest);
         Inputs.Field<Double> distance = inputs.d("Distance").withDefault(48.0);
 
         awaitInputs(inputs);

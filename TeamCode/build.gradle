@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
 
 //
 // build.gradle in TeamCode
@@ -24,6 +25,15 @@ android {
     }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
+    }
+}
+
 dependencies {
     implementation project(':FtcRobotController')
+    implementation 'dev.nextftc.v2:control:0.3.0'
+    implementation 'dev.nextftc.v2:hardware:0.3.0'
+    implementation 'dev.nextftc.v2:robot:0.3.0'
 }
