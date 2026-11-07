@@ -12,7 +12,7 @@ class Intake : Mechanism {
         motor.zeroPowerBehavior = NextMotor.ZeroPowerBehavior.BRAKE
     }
 
-    fun run(): Command = infinite { motor.throttle = 1.0 }
+    fun run(power: () -> Double = { 1.0 }): Command = infinite { motor.throttle = power() }
         .setEnd { motor.throttle = 0.0 }
 
     fun stop() {

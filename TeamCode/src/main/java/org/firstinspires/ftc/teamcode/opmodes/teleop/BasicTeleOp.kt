@@ -17,8 +17,16 @@ class BasicTeleOp(private val robot: Robot) : NextOpMode(robot) {
     override fun start() {
         robot.drivetrain.startDrive(gamepad1)
 
+        robot.intake.run {
+            // Reverse takes priority if both triggers are held.
+            when {
+                gamepad2.left_trigger > 0.1 -> -1.0
+                gamepad2.right_trigger > 0.1 -> 1.0
+                else -> 0.0
+            }
+        }.schedule()
+
         val operator = CommandGamepad(gamepad2)
-        operator.rightTrigger.isOver(0.1).whileTrue(robot.intake.run())
         operator.a.toggleOnTrue(robot.shooter.run())
     }
 
