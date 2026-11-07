@@ -11,7 +11,7 @@ class BasicTeleOp(private val robot: Robot) : NextOpMode(robot) {
         // Initialize the motors and close the stopper during INIT.
         robot.drivetrain.stop()
         robot.intake.stop()
-        robot.shooter.stop()
+        robot.shooter.initialize(hardwareMap)
         robot.stopper.close()
     }
 
@@ -30,6 +30,15 @@ class BasicTeleOp(private val robot: Robot) : NextOpMode(robot) {
 
         val operator = CommandGamepad(gamepad2)
         operator.a.toggleOnTrue(robot.shooter.run())
+        operator.x.onTrue(robot.shooter.speedUp())
+        operator.y.onTrue(robot.shooter.speedDown())
+    }
+
+    override fun periodic() {
+        telemetry.addData("Shooter", if (robot.shooter.isRunning) "ON" else "OFF")
+        telemetry.addData("Selected shooter RPM", robot.shooter.selectedRpm)
+        telemetry.addData("Measured shooter RPM", "%.0f", robot.shooter.measuredRpm)
+        telemetry.update()
     }
 
     override fun end() {
