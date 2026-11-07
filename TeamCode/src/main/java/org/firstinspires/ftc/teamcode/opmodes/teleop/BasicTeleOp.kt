@@ -8,14 +8,16 @@ import org.firstinspires.ftc.teamcode.Robot
 @NextTeleop(name = "Basic TeleOp")
 class BasicTeleOp(private val robot: Robot) : NextOpMode(robot) {
     init {
-        // Resolve the motors and start every mechanism at zero power during INIT.
+        // Initialize the motors and close the stopper during INIT.
         robot.drivetrain.stop()
         robot.intake.stop()
         robot.shooter.stop()
+        robot.stopper.close()
     }
 
     override fun start() {
         robot.drivetrain.startDrive(gamepad1)
+        CommandGamepad(gamepad1).a.onTrue(robot.stopper.toggle())
 
         robot.intake.run {
             // Reverse takes priority if both triggers are held.
