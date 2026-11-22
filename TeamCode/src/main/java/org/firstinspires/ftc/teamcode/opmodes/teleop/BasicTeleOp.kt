@@ -17,7 +17,6 @@ class BasicTeleOp(private val robot: Robot) : NextOpMode(robot) {
 
     override fun start() {
         robot.drivetrain.startDrive(gamepad1)
-        CommandGamepad(gamepad1).a.onTrue(robot.stopper.toggle())
 
         robot.intake.run {
             // Reverse takes priority if both triggers are held.
@@ -29,15 +28,18 @@ class BasicTeleOp(private val robot: Robot) : NextOpMode(robot) {
         }.schedule()
 
         val operator = CommandGamepad(gamepad2)
-        operator.a.toggleOnTrue(robot.shooter.run())
+        operator.b.onTrue(robot.stopper.toggle())
+        operator.a.onTrue(robot.shooter.toggle())
         operator.x.onTrue(robot.shooter.speedUp())
         operator.y.onTrue(robot.shooter.speedDown())
     }
 
     override fun periodic() {
+        robot.shooter.update()
         telemetry.addData("Shooter", if (robot.shooter.isRunning) "ON" else "OFF")
         telemetry.addData("Selected shooter RPM", robot.shooter.selectedRpm)
         telemetry.addData("Measured shooter RPM", "%.0f", robot.shooter.measuredRpm)
+        telemetry.addData("Shooter power", "%.0f%%", robot.shooter.commandedPower * 100.0)
         telemetry.update()
     }
 
